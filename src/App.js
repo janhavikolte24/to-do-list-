@@ -33,15 +33,34 @@ function App() {
       sno: sno,
       title: title,
       desc: desc,
-      isSelected : false,
-      onGoing : false,
-      complete : false 
+      isSelected: false,
+      onGoing: false,
+      complete: false,
     };
     setTodos([...todolist, myTodo]);
     console.log(myTodo);
   };
 
+  const complete = (title, desc) => {
+    updateListItem(
+      todolist.filter((item) => {
+        if (item.isSelected === true) item.complete = true;
+      })
+    );
+    console.log(todolist);
+  };
+
+  const onGoing = (title, desc) => {
+    updateListItem(
+      todolist.filter((item) => {
+        if (item.isSelected === true) item.onGoing = true;
+      })
+    );
+    console.log(todolist);
+  };
+
   const [todolist, setTodos] = useState(initTodo);
+  const [listItem, updateListItem] = useState("");
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todolist));
   }, [todolist]);
@@ -71,10 +90,36 @@ function App() {
     <>
       <Header title="My Todos List" searchBar={false} />
       <AddTodo addTodo={addTodo} />
-      <Todos todolist={todolist} OnDelete={OnDelete} Check={null} Ongoing={null} />
-      
-      
-      <Footer />
+      <Todos
+        todolist={todolist}
+        OnDelete={OnDelete}
+        complete={complete}
+        Ongoing={onGoing}
+      />
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+        }}
+      >
+        <button
+          type="button"
+          className="btn btn-success btn-sm"
+          onClick={complete}
+        >
+          Complete
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          onClick={onGoing}
+        >
+          OnGoing
+        </button>
+      </div>
     </>
   );
 }
